@@ -2,6 +2,7 @@ package com.example.springcoredemo.rest;
 
 import com.example.springcoredemo.common.Coach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,15 +10,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoController {
 
     // define private field for the dependency
-    public Coach myCoach;
+    private Coach myCoach;
+    private Coach anotherCoach;
 
     @Autowired
-    public DemoController(Coach coach) {
+    public DemoController(
+            @Qualifier("cricketCoach") Coach coach,
+            @Qualifier("cricketCoach") Coach anotherCoach) {
         this.myCoach = coach;
+        this.anotherCoach = anotherCoach;
     }
 
     @GetMapping("/dailyworkout")
     public String getDailyWorkout() {
         return myCoach.getDailyWorkout();
+    }
+
+    @GetMapping("/check")
+    public String check() {
+        return "Comparing beans: myCoach == anotherCoach, " + (myCoach == anotherCoach);
     }
 }
